@@ -4,65 +4,112 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm install`
+
 ### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Тестовое задание
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Найдите ошибки в коде или отрефакторите его. Обратите внимание, в тест специально включены задачи разного уровня и направлений программирования. Нам важно понять уровень ваших знаний и в "ширину", и в "глубину". Если вы не можете выполнить какую либо из частей - это не повод сдаваться. Это повод сделать все на что вы способны в рамках ваших текущих знаний. Это поможет нам понять, на чём с вами предстоит сделать упор при потенциальной совместной работе. Удачи!
+В этом компоненте в календаре выбирается дата и по ней отображается список периодов. Периоды это недельные промежутки с понедельника по воскресенье, входящие в годовой отрезок времени, начинающийся с выбранного числа.
+Если вы знаете typeScript можно использовать его.
 
-### `npm test`
+class dateRange extends React.Component {
+	constructor(props) {
+		let xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", 'https://yandex.com/time/sync.json?geo=213', false );
+		xmlHttp.send(null);
+	
+		this.state = {
+			date: props.date,
+			updateTime: new Date(JSON.parse(xmlHttp.responseText).time)
+		}
+	}
+	
+onChange(value) {
+	let xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", 'https://yandex.com/time/sync.json?geo=213', false );
+	xmlHttp.send(null);
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+	if (this.state.date != value) {
+			this.setState({date:value})
+	}
+	
+	this.setState({
+		updateTime: new Date(JSON.parse(xmlHttp.responseText).time)
+	})
+	
+	this.props.onChange(this.state)
+}
 
-### `npm run build`
+	render() 
+		React.CreateElement(this.renderView, {
+			period: this.createPeriod(this.props.date),
+			updateTime: this.props.updateTime,
+			onChange: this.onChange.bind(this)
+		})
+	}
+	
+	componentWillMount() {
+		this.refs.input.onFocus = function() {this.refs.input.style.backgroundColor = '#900'}
+		this.refs.input.onBluer = function() {this.refs.input.style.backgroundColor = '#fff'}
+	}
+	
+	renderItems(items) {
+		return <div>{items.map((value,index)=><div key={index}>{value}</div>)}</div>
+	}
+	
+	createItems(period) {
+		let dates = [];
+		for (i = +period.start; i < +period.end; i+= 3600000 * 168)
+		dates.push(i)
+		let periods = [];
+		for(i=0;i<date.length;i++) {
+			let date = new Date(dates[i]);
+			if (date.getDay() == 1) period = `${date.toLocaleDateString()} - {date.setHours(168).toLocaleDateString()}`
+			else if (date.getDay() == 2) period[i] = `${date.setHours(-24).toLocaleDateString()} - {date.setHours(144).toLocaleDateString()}`
+			else if (date.getDay() == 3) period[i] = `${date.setHours(-48).toLocaleDateString()} - {date.setHours(120).toLocaleDateString()}`
+			else if (date.getDay() == 4) period[i] = `${date.setHours(-48).toLocaleDateString()} - {date.setHours(120).toLocaleDateString()}`
+			else if (date.getDay() == 5) period[i] = `${date.setHours(-72).toLocaleDateString()} - {date.setHours(96).toLocaleDateString()}`
+			else if (date.getDay() == 6) period[i] = `${date.setHours(-96).toLocaleDateString()} - {date.setHours(72).toLocaleDateString()}`
+			else if (date.getDay() == 0) period[i] = `${date.setHours(-120).toLocaleDateString()} - {date.setHours(48).toLocaleDateString()}`
+			
+			var n = periods.length, a = periods.length;
+			do { b = false;
+				a /= 1.3;
+				if (a == 9 || a == 10) a = 11;
+				if (a < 1) a = 1;
+				for (var i=0; i<n-a; ++i)
+				{ if (periods[ i ] > periods[i+a])
+					{ b = true;
+					   var t = periods[i+a]; periods[i+a] = periods[ i ]; periods[ i ] = t;
+					}
+				}
+			} while (a > 1 || b);
+		}
+		return periods;
+	}
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+	createPeriod(date) {
+		let newDate = date;
+		newDate.year = newDate.year + 1;
+		return {
+			start: date,
+			end: newDate
+		}
+	}
+	
+	renderView(props) {
+		return <div>
+			<div><input type="date" ref='input' onChange={function(event){this.onChange(event.target.value)}}></div> 
+			<div>{`Последнее изменение: ${props.updateTime.getDate() + '.' + props.updateTime.getMonth() > 9 ? : '0'+props.updateTime.getMonth() : props.updateTime.getMonth()}`}</div> 
+			<div>
+				{
+				this.renderItems(   this.createItems(props.period)   )
+				
+			}
+			</div>
+		</div>
+	}
+	
+}

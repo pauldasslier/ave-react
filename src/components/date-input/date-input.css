@@ -1,0 +1,3 @@
+input[type=date]:focus {
+  background-color: #900;
+};
