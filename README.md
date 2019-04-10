@@ -111,5 +111,5 @@ onChange(value) {
 			</div>
 		</div>
 	}
-	
 }
+
